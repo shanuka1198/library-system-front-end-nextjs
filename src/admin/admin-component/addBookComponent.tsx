@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState, FormEvent } from "react";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import DeletePopup from "@/admin/admin-component/deletePopup";
+
 
 interface Book {
     bookId: string;
@@ -126,7 +126,7 @@ function AddBookComponent() {
     return (
         <>
             <section id="books" className="mb-8">
-                <h2 className="text-xl font-semibold mb-4">Books</h2>
+                <h2 className="text-xl font-semibold mb-4 text-black">Books</h2>
                 <div className="bg-white shadow-md rounded-lg p-4">
                 {/*<DeletePopup/>*/}
                     <form
@@ -221,7 +221,7 @@ function AddBookComponent() {
             </section>
 
             <section id="books" className="mb-8">
-                <h2 className="text-xl font-semibold mb-4">Books List</h2>
+                <h2 className="text-xl font-semibold mb-4 text-black">Books List</h2>
                 <div className="bg-white shadow-md rounded-lg p-4">
                     <table className="min-w-full table-auto">
                         <thead>
