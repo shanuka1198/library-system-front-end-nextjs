@@ -15,9 +15,9 @@ export default function AdminDashboard() {
     const [bookFieldActive,setBookFieldActive]=useState(true)
     const [barrowFieldActive,setBarrowFieldActive]=useState(false)
 
-    const { user } = useContext(GlobalContext) ?? {};
-
-    const token=localStorage.getItem("token");
+    // const { user } = useContext(GlobalContext) ?? {};
+    //
+    // const token=localStorage.getItem("token");
 
     function bookSectionHandle(){
         setBookFieldActive(!bookFieldActive)

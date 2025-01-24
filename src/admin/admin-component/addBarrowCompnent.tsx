@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import {flag} from "arg";
+
 
 
 const AddBorrowComponent = () => {
@@ -8,6 +8,13 @@ const AddBorrowComponent = () => {
     const [bookDetails,setBookDetails]=useState([]);
     const [isBookDetails,setIssetBookDetails]=useState(false);
     const [barrow,setBarrow]=useState([]);
+    const [isBarrow,setIsBarrow]=useState(false);
+    const [bookId,setBookId]=useState("")
+
+    const [email,setEmail]=useState("")
+    const [firstName,setFirstName]=useState("")
+    const [lastName,setLastName]=useState("")
+    const [address,setAddress]=useState("")
 
 
 
@@ -25,12 +32,25 @@ const AddBorrowComponent = () => {
         }, [isBookDetails]);
 
 
-    function getButton(bookId:string) {
-        console.log(bookId)
+    function getButton() {
 
-        axios.get("http://localhost:3030/books/"+bookId).then((res)=>{
+        setIsBarrow(true);
+
+    }
+
+    function barrowSubmit() {
+
+        const user={
+            email,
+            firstName,
+            lastName,
+            address
+        }
+
+        axios.post("http://localhost:3030/barrow/"+bookId,user).then((res)=>{
             console.log(res.data);
             setBarrow(res.data);
+            console.log(barrow);
         }).catch((err)=>{
             console.log(err);
         })
@@ -62,7 +82,8 @@ const AddBorrowComponent = () => {
                                     <button
                                         className="text-black rounded font-bold bg-blue-500 hover:bg-blue-600 w-full text-center"
                                         onClick={() =>{
-                                            getButton(book.bookId);
+                                            getButton();
+                                            setBookId(book.bookId);
                                         }}
                                     >
                                         Get
@@ -74,72 +95,72 @@ const AddBorrowComponent = () => {
                     </tbody>
                 </table>
             </div>
+            {isBarrow && (
                 <section id="borrow" className="mb-8">
                     <h2 className="text-xl font-semibold mb-4">Borrower Information</h2>
                     <div className="bg-white shadow-md rounded-lg p-4">
 
-                            <form className="space-y-4">
+                        <form className="space-y-4">
 
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">Email</label>
-                                    <input
-                                        value={barrow.email}
-                                        type="email"
-                                        placeholder="Enter borrower's email"
-                                        className="mt-1 text-black block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
-                                    />
-                                </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Email</label>
+                                <input onChange={(e)=>{
+                                    setEmail(e.target.value)
+                                }}
+                                    // value={barrow.email}
+                                    type="email"
+                                    placeholder="Enter borrower's email"
+                                    className="mt-1 text-black block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+                                />
+                            </div>
 
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">Username</label>
-                                    <input
-                                        value={barrow.username}
-                                        type="text"
-                                        placeholder="Enter username"
-                                        className="mt-1 block text-black w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
-                                    />
-                                </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">First Name</label>
+                                <input onChange={(e)=>{
+                                    setFirstName(e.target.value)
+                                }}
+                                    // value={barrow.firstName}
+                                    type="text"
+                                    placeholder="Enter first name"
+                                    className="mt-1 block text-black w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+                                />
+                            </div>
 
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">First Name</label>
-                                    <input
-                                        value={barrow.firstName}
-                                        type="text"
-                                        placeholder="Enter first name"
-                                        className="mt-1 block text-black w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
-                                    />
-                                </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Last Name</label>
+                                <input onChange={(e)=>{
+                                    setLastName(e.target.value)
+                                }}
+                                    // value={barrow.lastName}
+                                    type="text"
+                                    placeholder="Enter last name"
+                                    className="mt-1 block text-black w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+                                />
+                            </div>
 
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">Last Name</label>
-                                    <input
-                                        value={barrow.lastName}
-                                        type="text"
-                                        placeholder="Enter last name"
-                                        className="mt-1 block text-black w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
-                                    />
-                                </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Address</label>
+                                <input onChange={(e)=>{
+                                    setAddress(e.target.value)
+                                }}
+                                    // value={barrow.address}
+                                    type="text"
+                                    placeholder="Enter address"
+                                    className="mt-1 block text-black w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+                                />
+                            </div>
+                            <button onClick={(e)=>{
+                                e.preventDefault()
+                                barrowSubmit()
+                            }} type="submit" className="text-white w-20 p-3 rounded bg-blue-600">
+                                Barrow Book
+                            </button>
 
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">Address</label>
-                                    <input
-                                        value={barrow.address}
-                                        type="text"
-                                        placeholder="Enter address"
-                                        className="mt-1 block text-black w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
-                                    />
-                                </div>
-
-                                <button
-                                    type="submit"
-                                    className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-                                >
-                                    Borrow Book
-                                </button>
-                            </form>
-
+                        </form>
                     </div>
                 </section>
+            )}
+
         </>
     );
 };
