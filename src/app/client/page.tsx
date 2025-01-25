@@ -1,95 +1,82 @@
 'use client';
 
-import AddBookComponent from "@/admin/admin-component/addBookComponent";
-import {useState} from "react";
-import AddBarrowComponent from "@/admin/admin-component/addBarrowCompnent";
+import Image from 'next/image';
+import React, {useEffect, useState} from "react";
+import axios from "axios";
+import {useRouter} from "next/navigation";
 
 export default function AdminDashboard() {
 
-    const [bookFieldActive,setBookFieldActive]=useState(true)
-    const [barrowFieldActive,setBarrowFieldActive]=useState(false)
+    const [isBookDetail,setIsBookDetails]=useState(false);
+    const [bookDetails,setBookDetails]=useState([]);
 
-    function bookSectionHandle(){
-        setBookFieldActive(!bookFieldActive)
-        setBarrowFieldActive(false)
-    }
-    function barrowSectionHandle(){
-        setBarrowFieldActive(!barrowFieldActive)
-        setBookFieldActive(false)
-    }
+    const routes=useRouter();
 
-    function logOut(){
-        localStorage.clear();
-        window.location.href="/user/login";
-    }
+    useEffect(() => {
+        if (!isBookDetail) {
+            axios
+                .get("http://localhost:3030/books")
+                .then((res) => {
+                    setBookDetails(res.data);
+                    setIsBookDetails(true);
+                })
+                .catch((err) => {
+                    console.error(err);
+                    alert("Failed to fetch book details.");
+                });
+        }
+    }, [isBookDetail]);
 
+    function aboutUsPage() {
+        routes.push("/about-us")
+    }
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col">
-            {/* Header */}
-            <header className="bg-blue-600 text-white py-4 shadow-md">
-                <div className="container mx-auto px-4 flex justify-between items-center">
-                    <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-                    <nav>
-                        <ul className="flex space-x-4">
-                            <li>
-                                <button  onClick={()=>{
-                                    logOut()
-                                }}  className="hover:underline">
-                                    Dashboard
-                                </button>
-                            </li>
-                            <li>
-                                <a href="#" className="hover:underline">
-                                    Logout
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
+            <div className="flex justify-end w-full h-screen ">
+                <h1 className="relativetext-cyan-950 text-cyan-950 flex font-bold text-3xl mr-16 items-center "><span className="text-9xl">S.I</span>-LIBRARY</h1>
+                <Image className="rounded-2xl"
+                    src="/image/2.jpg" // Relative path for a static image in the 'public' folder
+                    alt="An example image"
+                    width={1000} // Desired width
+                    height={1000} // Desired height
+                />
+                <div className="absolute right-36 top-10">
+                    <div className="flex gap-5">
+                        <button  className="text-white font-bold underline cursor-pointer hover:bg-cyan-800 p-2 rounded-2xl">My Barrow</button>
+                        <button onClick={()=>{
+                            aboutUsPage()
+                        }} className="text-white font-bold underline cursor-pointer hover:bg-cyan-800 p-2 rounded-2xl">About</button>
+                    </div>
                 </div>
-            </header>
-
-            {/* Main Content */}
-            <div className="flex flex-grow">
-                {/* Sidebar */}
-                <aside className="w-64 bg-white shadow-md p-4">
-                    <ul className="space-y-4">
-                        <li>
-                            <p onClick={bookSectionHandle}
-
-                                className="block py-2 px-4 rounded hover:bg-blue-100"
-                            >
-                                Books
-                            </p>
-                        </li>
-                        <li>
-                            <a onClick={barrowSectionHandle}
-                                href="#borrow"
-                                className="block py-2 px-4 rounded hover:bg-blue-100"
-                            >
-                                Borrow
-                            </a>
-                        </li>
-                    </ul>
-                </aside>
-
-                {/* Main Section */}
-                <main className="flex-grow p-6">
-                    {bookFieldActive && (
-                        <div>
-                            <AddBookComponent />
-                        </div>
-
-                    )}
-                    {barrowFieldActive && (
-                        <div>
-                            <AddBarrowComponent />
-                        </div>
-
-                    )}
-
-                </main>
+                <div className="absolute w-[800px]  h-[500px] right-24 top-24 bg-white opacity-95 rounded-2xl">
+                    <div className="bg-white shadow-md rounded-lg p-4 mb-8">
+                        <table className="w-full table-auto">
+                            <thead>
+                            <tr className="border-b">
+                                <th className="px-4 py-2 text-left  text-cyan-950 font-bold">Book ID</th>
+                                <th className="px-4 py-2 text-left font-bold text-cyan-950">Title</th>
+                                <th className="px-4 py-2 text-left font-bold text-cyan-950">Description</th>
+                                <th className="px-4 py-2 text-left font-bold text-cyan-950">Author</th>
+                                <th className="px-4 py-2 text-left font-bold text-cyan-950">Category</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {bookDetails.map((data,index)=>(
+                                <tr key={index} className="border-b hover:bg-gray-50">
+                                    <td className="px-4 py-2 text-black">{data.bookId}</td>
+                                    <td className="px-4 py-2 text-black">{data.title}</td>
+                                    <td className="px-4 py-2 text-black">{data.description}</td>
+                                    <td className="px-4 py-2 text-black">{data.author}</td>
+                                    <td className="px-4 py-2 text-black">{data.category}</td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
+
         </div>
     );
 }
