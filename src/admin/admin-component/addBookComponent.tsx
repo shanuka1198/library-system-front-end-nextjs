@@ -232,7 +232,7 @@ function AddBookComponent() {
                             <th className="px-4 py-2 text-left font-medium text-gray-700">Author</th>
                             <th className="px-4 py-2 text-left font-medium text-gray-700">Price</th>
                             <th className="px-4 py-2 text-left font-medium text-gray-700">Category</th>
-                            <th className="px-4 py-2 text-left font-medium text-gray-700">Status</th>
+                            <th className="px-4 py-2 text-left font-medium text-gray-700">Start Date</th>
                         </tr>
                         </thead>
                         <tbody>
