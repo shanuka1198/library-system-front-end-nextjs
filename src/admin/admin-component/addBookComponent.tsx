@@ -2,6 +2,8 @@ import axios from "axios";
 import { useEffect, useState, FormEvent } from "react";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import {toast, Toaster} from "react-hot-toast";
+import {Toast} from "next/dist/client/components/react-dev-overlay/internal/components/Toast";
 
 
 interface Book {
@@ -11,6 +13,7 @@ interface Book {
     author: string;
     price: number;
     category: string;
+    quantity:number
 }
 
 
@@ -27,6 +30,7 @@ function AddBookComponent() {
     const [author, setAuthor] = useState<string>("");
     const [price, setPrice] = useState<number | "">("");
     const [category, setCategory] = useState<string>("Client");
+    const [quantity, setQuantity] = useState<number | "">("");
 
     function createBook(e: FormEvent) {
         e.preventDefault();
@@ -56,6 +60,7 @@ function AddBookComponent() {
             author,
             price,
             category,
+            quantity,
         };
         console.log("*********5")
         axios
@@ -67,7 +72,7 @@ function AddBookComponent() {
             .then((res) => {
                 console.log("*********6")
                 console.log("Book created successfully:", res.data);
-                alert("Book created successfully!");
+                // alert("Book created successfully!");
                 setIsBookDetails(false); // Refresh the book list
                 setBookId("")
                 setTitle("")
@@ -209,10 +214,26 @@ function AddBookComponent() {
                             </select>
                         </div>
 
-                        <button
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">
+                                Quantity
+                            </label>
+                            <input
+                                onChange={(e) => setQuantity(e.target.value)}
+                                type="number"
+                                min="0"
+                                placeholder="Enter price"
+                                className="mt-1 text-black block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+                            />
+                        </div>
+
+                        <button onClick={()=>{
+                            toast.success('Book Successfully Added');
+                        }}
                             type="submit"
                             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                         >
+                            <Toaster/>
                             Add Book
                         </button>
 
@@ -232,7 +253,8 @@ function AddBookComponent() {
                             <th className="px-4 py-2 text-left font-medium text-gray-700">Author</th>
                             <th className="px-4 py-2 text-left font-medium text-gray-700">Price</th>
                             <th className="px-4 py-2 text-left font-medium text-gray-700">Category</th>
-                            <th className="px-4 py-2 text-left font-medium text-gray-700">Start Date</th>
+                            <th className="px-4 py-2 text-left font-medium text-gray-700">Quantity</th>
+                            <th className="px-4 py-2 text-left font-medium text-gray-700">Action</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -244,6 +266,7 @@ function AddBookComponent() {
                                 <td className="px-4 py-2 text-black">{book.author}</td>
                                 <td className="px-4 py-2 text-black">${book.price}</td>
                                 <td className="px-4 py-2 text-black">{book.category}</td>
+                                <td className="px-4 py-2 text-black">{book.quantity}</td>
                                 <td className="px-4 py-2 flex gap-3">
 
                                     <div>

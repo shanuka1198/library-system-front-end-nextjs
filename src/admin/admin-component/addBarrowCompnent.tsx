@@ -3,6 +3,8 @@ import axios from "axios";
 import { MdDelete } from "react-icons/md";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import {toast, Toaster} from "react-hot-toast";
+import UserTable from "@/admin/user-table/userTable";
 
 const AddBorrowComponent = () => {
     const [bookDetails, setBookDetails] = useState([]);
@@ -20,6 +22,8 @@ const AddBorrowComponent = () => {
 
     const [isBarrowData, setIsBarrowData] = useState(false);
     const [barrowData, setBarrowData] = useState([]);
+
+
 
     useEffect(() => {
         if (!isBookDetails) {
@@ -51,6 +55,8 @@ const AddBorrowComponent = () => {
             console.log(res.data);
             setBarrow(res.data);
             console.log(barrow);
+            setIssetBookDetails(false);
+            setIsBarrowData(false);
         }).catch((err) => {
             console.log(err);
         });
@@ -72,6 +78,7 @@ const AddBorrowComponent = () => {
         axios.delete("http://localhost:3030/barrow/" + bookId).then((res) => {
             console.log(res.data);
             setIsBarrowData(false);
+            setIssetBookDetails(false);
         }).catch((err) => {
             console.log(err);
         });
@@ -89,6 +96,7 @@ const AddBorrowComponent = () => {
                         <th className="px-4 py-2 text-left font-medium text-gray-700">Description</th>
                         <th className="px-4 py-2 text-left font-medium text-gray-700">Author</th>
                         <th className="px-4 py-2 text-left font-medium text-gray-700">Category</th>
+                        <th className="px-4 py-2 text-left font-medium text-gray-700">Quantity</th>
                         <th className="px-4 py-2 text-left font-medium text-gray-700">Actions</th>
                     </tr>
                     </thead>
@@ -100,6 +108,7 @@ const AddBorrowComponent = () => {
                             <td className="px-4 py-2 text-black">{book.description}</td>
                             <td className="px-4 py-2 text-black">{book.author}</td>
                             <td className="px-4 py-2 text-black">{book.category}</td>
+                            <td className="px-4 py-2 text-black">{book.quantity}</td>
                             <td className="px-4 py-2">
                                 <button
                                     className="text-white rounded font-bold bg-blue-500 hover:bg-blue-600 px-4 py-2"
@@ -115,6 +124,9 @@ const AddBorrowComponent = () => {
                     ))}
                     </tbody>
                 </table>
+            </div>
+            <div>
+                <UserTable/>
             </div>
 
             {/* Borrower Form */}
@@ -181,19 +193,22 @@ const AddBorrowComponent = () => {
                                 onClick={(e) => {
                                     e.preventDefault();
                                     barrowSubmit();
+                                    toast.success('Barrow Successfully Completed');
                                 }}
                                 type="submit"
                                 className="text-white w-52 py-2 rounded bg-blue-600 hover:bg-blue-700"
                             >
+                                <Toaster />
                                 Borrow Book
                             </button>
+
                         </form>
                     </div>
                 </section>
             )}
 
             {/* Borrow Table */}
-            <div className="w-52">
+            <div className="w-full">
                 <h2 className="text-xl font-semibold mb-4 text-black">Borrow Cards</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {barrowData.map((data, index) => (
@@ -203,7 +218,7 @@ const AddBorrowComponent = () => {
                         >
                             <h3 className="text-lg font-bold text-black mb-2">{data.title}</h3>
                             <p className="text-sm text-gray-600 mb-2">
-                                <span className=" font-bold text-black">Book ID:</span> {data.bookId}
+                                <span className="font-bold text-black">Book ID:</span> {data.bookId}
                             </p>
                             <p className="text-sm text-gray-600 mb-2">
                                 <span className="font-bold text-black">Description:</span> {data.description}
@@ -231,14 +246,20 @@ const AddBorrowComponent = () => {
                             </p>
                             <button
                                 className="text-red-500 border border-red-500 p-3 hover:text-red-800"
-                                onClick={() => handleBarrowDelete(data.bookId)}
+                                onClick={(()=>{
+                                    handleBarrowDelete(data.bookId)
+                                    toast.success('Barrow Deleted');
+                                    <Toaster/>
+                                })}
                             >
                                 <MdDelete />
                             </button>
+
                         </div>
                     ))}
                 </div>
             </div>
+
         </div>
     );
 };
