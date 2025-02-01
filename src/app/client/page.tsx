@@ -59,7 +59,7 @@ export default function AdminDashboard() {
 
                         }}
                                 className="text-white transition-colors duration-500 ease-in-out font-bold underline cursor-pointer hover:bg-cyan-800 p-2 rounded-2xl">My
-                            Barrow
+                            Borrow
                         </button>
                         <button onClick={() => {
                             aboutUsPage()

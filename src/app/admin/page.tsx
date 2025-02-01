@@ -1,23 +1,39 @@
 'use client';
 
 import AddBookComponent from "@/admin/admin-component/addBookComponent";
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import AddBarrowComponent from "@/admin/admin-component/addBarrowCompnent";
 import {GlobalContext} from "@/context";
+import jwt_decode from "jsonwebtoken";
 
-
-
+interface DecodedToken {
+    email: string;
+    role: string[];
+    [key: string]: any;
+}
 
 export default function AdminDashboard() {
-
-
 
     const [bookFieldActive,setBookFieldActive]=useState(true)
     const [barrowFieldActive,setBarrowFieldActive]=useState(false)
 
     // const { user } = useContext(GlobalContext) ?? {};
     //
-    // const token=localStorage.getItem("token");
+
+    useEffect(() => {
+
+        const token=localStorage.getItem("token");
+        if(token){
+            const decodedToken: DecodedToken = jwt_decode.decode(token);
+            if(decodedToken.role=="Client" || null){
+                window.location.href ='/client'
+            }
+        }else {
+            window.location.href ='/'
+        }
+
+
+    }, []);
 
     function bookSectionHandle(){
         setBookFieldActive(!bookFieldActive)
@@ -65,7 +81,7 @@ export default function AdminDashboard() {
             {/* Main Content */}
             <div className="flex flex-grow">
                 {/* Sidebar */}
-                <aside className="w-64 bg-white shadow-md p-4">
+                <aside className="w-28 bg-white shadow-md p-4">
                     <ul className="space-y-4">
                         <li>
                             <p onClick={bookSectionHandle}

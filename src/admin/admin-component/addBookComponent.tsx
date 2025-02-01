@@ -121,9 +121,11 @@ function AddBookComponent() {
         console.log(bookId);
         axios.delete("http://localhost:3030/books/"+bookId).then((res)=>{
             console.log(res);
+            toast.success('Book Successfully Deleted');
             setIsBookDetails(false);
         }).catch((err)=>{
             console.log(err);
+            toast.success('Book not Deleted');
         });
 
     }

@@ -1,84 +1,70 @@
 
-import React from "react";
+import React, {useContext, useEffect, useState} from "react";
+import axios from "axios";
+import {GlobalContext} from "@/context";
 
-interface User {
-    email: string;
-    username: string;
-    firstName: string;
-    lastName: string;
-    address: string;
-}
-
-const users: User[] = [
-    {
-        email: "john.doe@example.com",
-        username: "johndoe",
-        firstName: "John",
-        lastName: "Doe",
-        address: "123 Main St, Springfield",
-    },
-    {
-        email: "jane.smith@example.com",
-        username: "janesmith",
-        firstName: "Jane",
-        lastName: "Smith",
-        address: "456 Oak Ave, Metropolis",
-    },
-];
 
 const UserTable = () => {
+
+    const [isUser,setIsUser]=useState(false);
+    const [userData,setUserData]=useState([]);
+     const {setUserFormData} = useContext(GlobalContext) ?? {};
+
+   //   console.log("******")
+   // console.log(userFormData);
+   //  console.log("******")
+
+    useEffect(() => {
+        if (!isUser) {
+            axios.get("http://localhost:3030/auth/user").then((res) => {
+                // console.log(res.data);
+                setUserData(res.data);
+                setIsUser(true);
+            }).catch((err) => {
+                console.log(err);
+            });
+        }
+    }, [isUser]);
+
+
+    function getUser(email:string) {
+        axios.get("http://localhost:3030/auth/user/"+email).then((res) => {
+            // console.log(res.data);
+            setUserFormData(res.data);
+        }).catch((err) => {
+            console.log(err);
+        });
+    }
+
     return (
         <div className="p-6 bg-white rounded-lg shadow-md">
-            <h1 className="text-3xl font-bold mb-6 text-gray-800">User Table</h1>
-            <div className="overflow-x-auto">
-                <table className="min-w-full border-collapse border border-gray-300">
+            <div className="w-[300px] h-[100px] overflow-y-auto bg-white shadow-md rounded-lg p-4 mb-8">
+                <table className="w-full table-auto">
                     <thead>
-                    <tr className="bg-blue-100">
-                        <th className="border border-gray-300 px-6 py-3 text-left text-gray-700 font-medium">
-                            Email
-                        </th>
-                        <th className="border border-gray-300 px-6 py-3 text-left text-gray-700 font-medium">
-                            Username
-                        </th>
-                        <th className="border border-gray-300 px-6 py-3 text-left text-gray-700 font-medium">
-                            First Name
-                        </th>
-                        <th className="border border-gray-300 px-6 py-3 text-left text-gray-700 font-medium">
-                            Last Name
-                        </th>
-                        <th className="border border-gray-300 px-6 py-3 text-left text-gray-700 font-medium">
-                            Address
-                        </th>
-                        <th className="border border-gray-300 px-6 py-3 text-center text-gray-700 font-medium">
-                            Actions
-                        </th>
+                    <tr className="border-b">
+                        <th className="px-4 py-2 text-left font-medium text-gray-700">Email</th>
+                        <th className="px-4 py-2 text-left font-medium text-gray-700">Username</th>
+                        <th className="px-4 py-2 text-left font-medium text-gray-700">First Name</th>
+                        <th className="px-4 py-2 text-left font-medium text-gray-700">Last Name</th>
+                        <th className="px-4 py-2 text-left font-medium text-gray-700">Address</th>
+                        <th className="px-4 py-2 text-left font-medium text-gray-700">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {users.map((user, index) => (
-                        <tr
-                            key={index}
-                            className="hover:bg-gray-50 transition-colors duration-200"
-                        >
-                            <td className="border border-gray-300 px-6 py-3 text-gray-800">
-                                {user.email}
-                            </td>
-                            <td className="border border-gray-300 px-6 py-3 text-gray-800">
-                                {user.username}
-                            </td>
-                            <td className="border border-gray-300 px-6 py-3 text-gray-800">
-                                {user.firstName}
-                            </td>
-                            <td className="border border-gray-300 px-6 py-3 text-gray-800">
-                                {user.lastName}
-                            </td>
-                            <td className="border border-gray-300 px-6 py-3 text-gray-800">
-                                {user.address}
-                            </td>
-                            <td className="border border-gray-300 px-6 py-3 text-center">
+                    {userData.map((user, index) => (
+                        <tr key={index} className="border-b hover:bg-gray-50">
+                            <td className="px-4 py-2 text-black">{user.email}</td>
+                            <td className="px-4 py-2 text-black">{user.username}</td>
+                            <td className="px-4 py-2 text-black">{user.firstName}</td>
+                            <td className="px-4 py-2 text-black">{user.lastName}</td>
+                            <td className="px-4 py-2 text-black">{user.address}</td>
+                            <td className="px-4 py-2">
                                 <button
-                                    className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all"
-                                    onClick={() => alert(`Fetching user: ${user.username}`)}
+                                    className="text-white rounded font-bold bg-blue-500 hover:bg-blue-600 px-4 py-2"
+                                    onClick={() => {
+                                        alert(`Fetching user: ${user.username}`);
+                                        getUser(user.email);
+                                    }}
                                 >
                                     Get User
                                 </button>

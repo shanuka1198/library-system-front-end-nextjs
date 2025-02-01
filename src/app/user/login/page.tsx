@@ -22,6 +22,8 @@ export default function Login() {
 
     const router = useRouter();
 
+
+
     const loginForm = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
@@ -31,11 +33,16 @@ export default function Login() {
             const response = await axios.post("http://localhost:3030/auth/login", {
                 email,
                 password,
+            },{
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
             });
 
             const token = response.data.token;
             if (!token) {
                 throw new Error("No token received from server");
+
             }
 
             localStorage.setItem("token", token);

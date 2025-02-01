@@ -18,9 +18,10 @@ interface GlobalStateProps {
 
 export default function GlobalState({ children }: GlobalStateProps) {
     const [user, setUser] = useState([]);
+    const [userFormData,setUserFormData]=useState([]);
 
     return (
-        <GlobalContext.Provider value={{ user, setUser }}>
+        <GlobalContext.Provider value={{ user, setUser, userFormData ,setUserFormData }}>
             {children}
         </GlobalContext.Provider>
     );
